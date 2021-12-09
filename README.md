@@ -1,4 +1,6 @@
-# frontend
+# Candy machine mint vue3
+Forked from https://github.com/exiled-apes/candy-machine-mint
+
 
 ## Project setup
 ```

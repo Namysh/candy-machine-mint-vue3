@@ -1,27 +1,27 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <SolanaApp>
+    <Header></Header>
+    <main class="flex flex-col items-center justify-center flex-1">
+      <router-view></router-view>
+    </main>
+
+    <div id="aside" class="absolute inset-0 pointer-events-none aside-wrapper"></div>
+  </SolanaApp>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
-
-export default defineComponent({
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-});
+<script lang="ts" setup>
+import Header from './components/Header.vue'
+import SolanaApp from './components/layouts/SolanaApp.vue';
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  @apply h-full flex flex-col m-auto max-w-screen-lg;
+}
+
+.aside-wrapper:not(:empty) {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  @apply flex items-center justify-center;
 }
 </style>
