@@ -9,7 +9,7 @@
             </li>
         </ul>
 
-        <router-view name="wallet"></router-view>
+        <router-view name="rightHeader"></router-view>
     </header>
 </template>
 
@@ -27,7 +27,6 @@ interface NavigationItem {
 }
 const navigation = computed<NavigationItem[]>(() => [
     { label: 'Home', path: '/', active: router.currentRoute.value.path === '/' },
-    // { label: 'Mint', path: '/mint', active: router.currentRoute.value.path === '/mint' },
 ]
 )
 

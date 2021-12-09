@@ -6,14 +6,14 @@ const routes: Array<RouteRecordRaw> = [
     path: '/',
     components: {
       default: Home,
-      wallet: () => import('../views/partials/OpenMachine.vue')
+      rightHeader: () => import('../views/partials/OpenMachine.vue')
     }
   },
   {
     path: '/machine',
     components: {
       default: Mint,
-      wallet: () => import('../views/partials/Wallet.vue')
+      rightHeader: () => import('../views/partials/Wallet.vue')
     }
   }
 ]
