@@ -17,7 +17,7 @@
                 <span v-else-if="isActive">Mint</span>
                 <VueCountdown
                     v-else
-                    :time="Math.max(0, startDate.getMilliseconds() - Date.now())"
+                    :time="Math.max(0, startDate.getTime() - Date.now())"
                     @end="() => isActive = true"
                     v-slot="{ days, hours, minutes, seconds }"
                 >Available in ：{{ days }}d {{ hours }}h {{ minutes }}m {{ seconds }}s</VueCountdown>
