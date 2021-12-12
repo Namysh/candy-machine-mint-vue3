@@ -1,40 +1,38 @@
 <template>
     <header class="flex items-center h-16 gap-8 p-4 text-lg">
         <router-link to="/" class="inline-flex items-center text-xl font-bold">
-            🍭 <span id="header__name" class="hidden ml-2 md:inline-block">Candy Machine</span>
-            </router-link>
+            🍭
+            <span id="header__name" class="hidden ml-2 md:inline-block">Candy Machine</span>
+        </router-link>
         <ul class="flex gap-4 text-white">
-            <li v-for="item in navigation" :key="item.label" :class="item.active ? 'font-bold' : 'text-opacity-60'">
+            <li v-for="item in navigation" :key="item.label" class="text-opacity-60">
                 <router-link :to="item.path">{{ item.label }}</router-link>
             </li>
         </ul>
 
-        <router-view name="rightHeader"></router-view>
+        <router-view class="ml-auto" name="rightHeader"></router-view>
     </header>
 </template>
 
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { useRouter } from 'vue-router'
-
-const router = useRouter()
 
 interface NavigationItem {
     label: string,
     path: string,
-    active: boolean
 }
 const navigation = computed<NavigationItem[]>(() => [
-    { label: 'Home', path: '/', active: router.currentRoute.value.path === '/' },
+    { label: 'Home', path: '/' },
 ]
 )
 
 </script>
 
 <style scoped>
-
-
+.router-link-exact-active {
+    @apply font-bold text-opacity-100;
+}
 </style>
 
 <style>
@@ -73,4 +71,5 @@ const navigation = computed<NavigationItem[]>(() => [
 
 .wallet-adapter-modal-collapse-button-active > .wallet-adapter-button-end-icon {
     @apply transform rotate-180 transition-all duration-200;
-}</style>
+}
+</style>

@@ -1,5 +1,5 @@
 <template>
-    <div class="ml-auto bg-blue-500 rounded-md">
+    <div v-bind="$attrs" class="bg-blue-500 rounded-md">
         <button class="px-4 py-1" @click="showModal" v-if="!wallet">Connect Wallet</button>
         <p class="px-4 py-1" v-else>{{ shortenAddress(wallet.publicKey.toBase58() || "") }}</p>
     </div>

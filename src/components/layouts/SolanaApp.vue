@@ -1,13 +1,12 @@
 <template>
   <WalletProvider :wallets="wallets" :autoConnect="false">
     <WalletModalProvider>
-     <slot></slot>
+      <slot></slot>
     </WalletModalProvider>
   </WalletProvider>
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import {
   getPhantomWallet,
@@ -26,13 +25,12 @@ import { WalletModalProvider } from "@solana/wallet-adapter-vue-ui";
 
 const network = process.env.VUE_APP_SOLANA_NETWORK as WalletAdapterNetwork;
 
-const wallets = computed<Wallet[]>(
-  () => [
-    getPhantomWallet(),
-    getSlopeWallet(),
-    getSolflareWallet(),
-    getSolletWallet({ network }),
-    getSolletExtensionWallet({ network })
-  ]
-);
+const wallets: Wallet[] = [
+  getPhantomWallet(),
+  getSlopeWallet(),
+  getSolflareWallet(),
+  getSolletWallet({ network }),
+  getSolletExtensionWallet({ network })
+];
+
 </script>

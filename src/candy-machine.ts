@@ -60,6 +60,7 @@ export const awaitTransactionSignatureConfirmation = async (
     try {
       subId = connection.onSignature(
         txid,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (result: any, context: any) => {
           done = true;
           status = {
@@ -174,6 +175,7 @@ export const getCandyMachineState = async (
     program,
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const state: any = await program.account.candyMachine.fetch(candyMachineId);
 
   const itemsAvailable = state.data.itemsAvailable.toNumber();

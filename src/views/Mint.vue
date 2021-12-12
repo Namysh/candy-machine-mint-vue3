@@ -1,5 +1,5 @@
 <template>
-   <div class="w-1/2 max-w-sm p-4 bg-black rounded-md bg-opacity-80">
+    <div class="w-1/2 max-w-sm p-4 bg-black rounded-md bg-opacity-80">
         <h3 class="text-base font-bold">Candy Machine Mint</h3>
         <div class="mt-4" v-if="wallet">
             <p>Balance: {{ (balance || 0).toLocaleString() }} SOL</p>
@@ -10,7 +10,7 @@
             <button
                 :disabled="isSoldOut || isMinting || !isActive"
                 class="w-full px-2 py-1 mt-4 text-center bg-blue-500 rounded-md btn"
-                @click="onMint"
+                @click="mint"
             >
                 <span v-if="isSoldOut">Sold Out</span>
                 <span v-else-if="isMinting">Minting...</span>
@@ -25,7 +25,6 @@
         </div>
         <div class="px-2 py-1 mt-4 bg-red-500 rounded-md" v-else>Please connect your wallet</div>
     </div>
- 
 </template>
 
 <script lang="ts" setup>
@@ -74,33 +73,42 @@ const balance = ref<number>(0)
 const wallet = useAnchorWallet();
 const candyMachine = ref<CandyMachine>()
 
-const refreshCandyMachineState = () => {
-    (async () => {
-        if (!wallet) return;
+const refreshCandyMachineState = async () => {
+    if (!wallet.value) return;
 
-        const {
-            candyMachine: candyMachineBis,
-            goLiveDate: goLiveDateBis,
-            itemsAvailable: itemsAvailableBis,
-            itemsRemaining: itemsRemainingBis,
-            itemsRedeemed: itemsRedeemedBis,
-        } = await getCandyMachineState(
-            wallet.value as anchor.Wallet,
-            candyMachineId,
-            connection
-        );
+    const {
+        candyMachine: candyMachineBis,
+        goLiveDate: goLiveDateBis,
+        itemsAvailable: itemsAvailableBis,
+        itemsRemaining: itemsRemainingBis,
+        itemsRedeemed: itemsRedeemedBis,
+    } = await getCandyMachineState(
+        wallet.value as anchor.Wallet,
+        candyMachineId,
+        connection
+    );
 
-        itemsAvailable.value = itemsAvailableBis;
-        itemsRemaining.value = itemsRemainingBis;
-        itemsRedeemed.value = itemsRedeemedBis;
+    itemsAvailable.value = itemsAvailableBis;
+    itemsRemaining.value = itemsRemainingBis;
+    itemsRedeemed.value = itemsRedeemedBis;
 
-        isSoldOut.value = itemsRemaining.value === 0;
-        startDate.value = goLiveDateBis; 
-        candyMachine.value = candyMachineBis;
-    })();
+    isSoldOut.value = itemsRemaining.value === 0;
+    startDate.value = goLiveDateBis;
+    candyMachine.value = candyMachineBis;
 };
 
-const onMint = async () => {
+const refreshBalance = async () => {
+    if (wallet && wallet?.value?.publicKey !== undefined) {
+        balance.value = await connection.getBalance(wallet.value.publicKey) / LAMPORTS_PER_SOL;
+    }
+}
+
+const refreshAll = () => {
+    refreshCandyMachineState();
+    refreshBalance();
+}
+
+const mint = async () => {
     try {
         isMinting.value = true
         if (wallet && candyMachine.value?.program && wallet?.value?.publicKey !== undefined) {
@@ -135,6 +143,7 @@ const onMint = async () => {
                 // });
             }
         }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
         // TODO: blech:
         let message = error.msg || "Minting failed! Please try again!";
@@ -157,27 +166,12 @@ const onMint = async () => {
 
         console.log(message)
     } finally {
-        if (wallet && wallet?.value?.publicKey !== undefined) {
-            balance.value = await connection.getBalance(wallet.value.publicKey) / LAMPORTS_PER_SOL;
-        }
+        refreshAll()
         isMinting.value = false
-        refreshCandyMachineState();
     }
 };
 
-
-
-watch([wallet, () => connection], async () => {
-    console.log('Watcherrrrr')
-
-    if (wallet && wallet?.value?.publicKey !== undefined) {
-        balance.value = await connection.getBalance(wallet.value.publicKey) / LAMPORTS_PER_SOL;
-    }
-
-})
-
-
-watch([wallet, () => candyMachineId, () => connection], refreshCandyMachineState);
+watch(wallet, refreshAll, { immediate: true })
 </script>
 
 <style scoped>
